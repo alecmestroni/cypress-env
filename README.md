@@ -62,6 +62,7 @@ JSON files must respect this sintax:
 {
 	"baseUrl": "https://www.google.com",
 	"specPattern": "cypress/e2e/**/**.js",
+	"excludeSpecPattern": "cypress/e2e/**/toExlude.js",
 	"env": {
 		"var1": "value1",
 		"var2": "value2",
@@ -70,11 +71,12 @@ JSON files must respect this sintax:
 }
 ```
 
-| Parameter   | Mandatory | Overwrites value in cypress.config.js | Notes                                    |
-| ----------- | --------- | ------------------------------------- | ---------------------------------------- |
-| baseUrl     | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
-| specPattern | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
-| env         | FALSE     | FALSE                                 | OBJ added to values in cypress.config.js |
+| Parameter          | Mandatory | Overwrites value in cypress.config.js | Notes                                    |
+| ------------------ | --------- | ------------------------------------- | ---------------------------------------- |
+| baseUrl            | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
+| specPattern        | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
+| excludeSpecPattern | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
+| env                | FALSE     | FALSE                                 | OBJ added to values in cypress.config.js |
 
 ### Open or run cypress with the correct environment variables:
 
@@ -99,6 +101,7 @@ Extracting local configurations from: "path/to/environment.json"
 
  - baseUrl: "https://www.google.com"
  - specPattern: "cypress/e2e/**/**.js"
+ - excludeSpecPattern: "cypress/e2e/**/toExlude.js",
  - env: "{
     "var1": "value1",
     "var2": "value2",

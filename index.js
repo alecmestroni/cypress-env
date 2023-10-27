@@ -26,6 +26,10 @@ async function getLocalEnv(config, dir) {
             config.specPattern = settings.specPattern
             console.log(` - specPattern: "${settings.specPattern}"`)
         }
+        if (settings.excludeSpecPattern) {
+            config.excludeSpecPattern = settings.excludeSpecPattern
+            console.log(` - excludeSpecPattern: "${settings.excludeSpecPattern}"`)
+        }
         if (settings.env) {
             config.env = {
                 ...settings.env,

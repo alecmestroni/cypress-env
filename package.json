@@ -1,6 +1,6 @@
 {
   "name": "cypress-env",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "cypress plugin to handle different environment easly",
   "main": "index.js",
   "scripts": {},
@@ -22,5 +22,8 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }
