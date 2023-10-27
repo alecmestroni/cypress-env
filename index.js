@@ -18,18 +18,14 @@ async function getLocalEnv(config, dir) {
     console.log(`Extracting local configurations from:` + chalk.cyan(` ${environmentFilename}\n`))
     try {
         const settings = require(environmentFilename)
-        if (settings.baseUrl) {
-            config.baseUrl = settings.baseUrl
-            console.log(` - baseUrl: "${settings.baseUrl}"`)
-        }
-        if (settings.specPattern) {
-            config.specPattern = settings.specPattern
-            console.log(` - specPattern: "${settings.specPattern}"`)
-        }
-        if (settings.excludeSpecPattern) {
-            config.excludeSpecPattern = settings.excludeSpecPattern
-            console.log(` - excludeSpecPattern: "${settings.excludeSpecPattern}"`)
-        }
+        const cypressSettings = ['baseUrl', 'specPattern', 'excludeSpecPattern']
+        Object.keys(settings).forEach(item => {
+            if (cypressSettings.includes(item)) {
+                console.log(item)
+                config[item] = settings[item]
+                console.log(` - ${item} : "${settings[item]}"`)
+            }
+        })
         if (settings.env) {
             config.env = {
                 ...settings.env,

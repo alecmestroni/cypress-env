@@ -1,6 +1,6 @@
 {
   "name": "cypress-env",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "cypress plugin to handle different environment easly",
   "main": "index.js",
   "scripts": {},
