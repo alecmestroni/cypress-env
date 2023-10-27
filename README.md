@@ -129,3 +129,9 @@ So you'll only have to type this command to open cypress in the correct environm
 ```bash
 npm run cy:test
 ```
+
+## THE JOB IS DONE!
+
+Happy testing to everyone!
+
+ALEC-JS
