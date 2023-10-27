@@ -1,0 +1,26 @@
+{
+  "name": "cypress-env",
+  "version": "0.0.6",
+  "description": "cypress plugin to handle different environment easly",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alecmestroni/cypress-env.git"
+  },
+  "keywords": [
+    "cypress",
+    "env",
+    "environment",
+    "multi-environment",
+    "cypress-env",
+    "cypress-plugin"
+  ],
+  "author": {
+    "name": "alec-js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2"
+  }
+}
