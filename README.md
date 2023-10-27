@@ -22,13 +22,13 @@ $ npm install -g cypress-env
 
 In your cypress.config.js file:
 
-```javascript
+```
 module.exports = defineConfig({
-	e2e: {
-		setupNodeEvents(on, config) {
-			require('cypress-xray-junit-reporter/plugin')(on, config, __dirname)
-		},
-	},
+ e2e: {
+  setupNodeEvents(on, config) {
+   require('cypress-xray-junit-reporter/plugin')(on, config, __dirname)
+  },
+ },
 })
 ```
 
