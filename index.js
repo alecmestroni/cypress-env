@@ -18,12 +18,11 @@ async function getLocalEnv(config, dir) {
     console.log(`Extracting local configurations from:` + chalk.cyan(` ${environmentFilename}\n`))
     try {
         const settings = require(environmentFilename)
-        const cypressSettings = ['baseUrl', 'specPattern', 'excludeSpecPattern']
+        const cypressSettings = ['baseUrl', 'specPattern', 'excludeSpecPattern', 'awsObj']
         Object.keys(settings).forEach(item => {
             if (cypressSettings.includes(item)) {
-                console.log(item)
                 config[item] = settings[item]
-                console.log(` - ${item} : "${settings[item]}"`)
+                console.log(` - ${chalk.yellow(item)} : ${JSON.stringify(settings[item], null, 4)}`)
             }
         })
         if (settings.env) {
@@ -31,7 +30,7 @@ async function getLocalEnv(config, dir) {
                 ...settings.env,
                 ...config.env,
             }
-            console.log(` - local env: "${JSON.stringify(config.env, null, 4)}"`)
+            console.log(' -' + chalk.yellow(' env ') + `: ${JSON.stringify(config.env, null, 4)}`)
         }
         console.log(chalk.green('\n√ ') + chalk.white('Configurations loaded correctly for the environment: ') + chalk.cyan(`< ${envName.toUpperCase()} >`))
     } catch (err) {
