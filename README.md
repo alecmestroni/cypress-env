@@ -88,7 +88,7 @@ JSON files must respect this syntax:
 | specPattern             | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
 | excludeSpecPattern      | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
 | env                     | FALSE     | FALSE                                 | OBJ added to values in cypress.config.js |
-| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secret-manager   |
+| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secrets-manager  |
 
 ### Open or run cypress with the correct environment variables:
 
@@ -179,14 +179,14 @@ npm run cy:test
 
 #
 
-### Compatibility with cypress-aws-secret-manager
+### Compatibility with cypress-aws-secrets-manager
 
-["cypress-aws-secret-manager"](https://www.npmjs.com/package/cypress-aws-secret-manager) is a plugin that allows a secret stored in the AWS secret manager to be loaded into cypress as an environment variable.
+["cypress-aws-secrets-manager"](https://www.npmjs.com/package/cypress-aws-secrets-manager) is a plugin that allows a secret stored in the AWS secret manager to be loaded into cypress as an environment variable.
 To make life easier I added a new key: awsSecretsManagerConfig.
 
-| Parameter               | Mandatory | Overwrites value in cypress.config.js | Notes                                  |
-| ----------------------- | --------- | ------------------------------------- | -------------------------------------- |
-| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secret-manager |
+| Parameter               | Mandatory | Overwrites value in cypress.config.js | Notes                                   |
+| ----------------------- | --------- | ------------------------------------- | --------------------------------------- |
+| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secrets-manager |
 
 The secret manager plugin will automatically handle this obj to recover the secret archived on AWS secret manager.
 
