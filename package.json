@@ -1,7 +1,7 @@
 {
   "name": "cypress-env",
-  "version": "0.1.0",
-  "description": "cypress plugin to handle different environment easily",
+  "version": "0.3.4",
+  "description": "Cypress Plugin | Easily manage and streamline your Cypress test scripts across multiple environments with the cypress-env npm library. This lightweight utility simplifies the process of handling different environments (such as test, staging, and production) by providing a environment-specific settings in your Cypress tests.",
   "main": "index.js",
   "scripts": {},
   "repository": {
