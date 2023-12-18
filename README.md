@@ -70,25 +70,27 @@ JSON files must respect this syntax:
 ```json
 //environment.json
 {
-	"baseUrl": "https://www.google.com",
-	"specPattern": "cypress/e2e/**/**.js",
-	"excludeSpecPattern": "cypress/e2e/**/toExclude.js",
-	"env": {
-		"var1": "value1",
-		"var2": "value2",
-		"var3": "value3",
-		"envName": "environment"
-	}
+  "baseUrl": "https://www.google.com",
+  "specPattern": "cypress/e2e/**/**.js",
+  "excludeSpecPattern": "cypress/e2e/**/toExclude.js",
+  "supportFile": "cypress/support/customName.js",
+  "env": {
+    "var1": "value1",
+    "var2": "value2",
+    "var3": "value3",
+    "envName": "environment"
+  }
 }
 ```
 
-| Parameter               | Mandatory | Overwrites value in cypress.config.js | Notes                                    |
-| ----------------------- | --------- | ------------------------------------- | ---------------------------------------- |
-| baseUrl                 | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
-| specPattern             | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
-| excludeSpecPattern      | FALSE     | TRUE                                  | Overwrites value in cypress.config.js    |
-| env                     | FALSE     | FALSE                                 | OBJ added to values in cypress.config.js |
-| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secrets-manager  |
+| Parameter               | Mandatory | Overwrites value in cypress.config.js | Notes                                                                               |
+| ----------------------- | --------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
+| baseUrl                 | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
+| specPattern             | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
+| excludeSpecPattern      | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
+| supportFile             | FALSE     | TRUE                                  | Needs the parameters "supportFile" in the main e2e or component object set to false |
+| env                     | FALSE     | FALSE                                 | OBJ added to values in cypress.config.js                                            |
+| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secrets-manager                                             |
 
 ### Open or run cypress with the correct environment variables:
 
@@ -118,6 +120,7 @@ Extracting local configurations from: "path/to/environment.json"
  - baseUrl: "https://www.google.com"
  - specPattern: "cypress/e2e/**/**.js"
  - excludeSpecPattern: "cypress/e2e/**/toExclude.js",
+ - supportFile: "cypress/support/customName.js",
  - env: "{
     "var1": "value1",
     "var2": "value2",
@@ -163,11 +166,11 @@ In your package.json file create a script like this:
 ```json
 //package.json
 {
-	"scripts": {
-		"cy:test": "npx cypress open -e envName=test",
-		"cy:stage": "npx cypress open -e envName=stage",
-		"cy:prod": "npx cypress open -e envName=prod"
-	}
+  "scripts": {
+    "cy:test": "npx cypress open -e envName=test",
+    "cy:stage": "npx cypress open -e envName=stage",
+    "cy:prod": "npx cypress open -e envName=prod"
+  }
 }
 ```
 
@@ -193,20 +196,21 @@ The secret manager plugin will automatically handle this obj to recover the secr
 ```json
 //environment.json
 {
-	"baseUrl": "https://www.google.com",
-	"specPattern": "cypress/e2e/**/**.js",
-	"excludeSpecPattern": "cypress/e2e/**/toExclude.js",
-	"env": {
-		"var1": "value1",
-		"var2": "value2",
-		"var3": "value3",
-		"envName": "test"
-	},
-	"awsSecretsManagerConfig": {
-		"secretName": "...",
-		"profile": "...",
-		"region": "..."
-	}
+  "baseUrl": "https://www.google.com",
+  "specPattern": "cypress/e2e/**/**.js",
+  "excludeSpecPattern": "cypress/e2e/**/toExclude.js",
+  "supportFile": "cypress/support/customName.js",
+  "env": {
+    "var1": "value1",
+    "var2": "value2",
+    "var3": "value3",
+    "envName": "test"
+  },
+  "awsSecretsManagerConfig": {
+    "secretName": "...",
+    "profile": "...",
+    "region": "..."
+  }
 }
 ```
 

@@ -20,9 +20,9 @@ async function getLocalEnv(config, dir) {
     console.log(`Extracting local configurations from:` + chalk.cyan(` ${environmentFilename}\n`))
     try {
         const settings = require(environmentFilename)
-        const cypressSettings = ['baseUrl', 'specPattern', 'excludeSpecPattern', 'awsSecretsManagerConfig']
+        const cypressSettings = require('./cySettings.json')
         Object.keys(settings).forEach(item => {
-            if (cypressSettings.includes(item)) {
+            if (cypressSettings.settings.includes(item)) {
                 config[item] = settings[item]
                 console.log(`${chalk.yellow(item)} : ${JSON.stringify(settings[item], null, 1)}`)
             }

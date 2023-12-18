@@ -1,0 +1,9 @@
+{
+    "settings": [
+        "baseUrl",
+        "specPattern",
+        "excludeSpecPattern",
+        "awsSecretsManagerConfig",
+        "supportFile"
+    ]
+}
