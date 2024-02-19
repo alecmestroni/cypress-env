@@ -36,7 +36,7 @@ In your cypress.config.js file:
 module.exports = defineConfig({
  e2e: {
   setupNodeEvents(on, config) {
-   require('cypress-xray-junit-reporter/plugin')(on, config, __dirname)
+   require('cypress-env')(on, config, __dirname)
   },
  },
 })
@@ -154,7 +154,7 @@ Starting plugin: cypress-env
 
 ConfigurationError!
 You must specify the "__dirname" element in the config, change the require to:
-require("cypress-xray-junit-reporter/plugin")(on, config, __dirname)
+require("cypress-env")(on, config, __dirname)
 
 ====================================================================================================
 ```

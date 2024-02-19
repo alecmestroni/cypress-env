@@ -6,9 +6,9 @@ module.exports = (on, config, dir) => {
     console.log(separator)
     console.log('Starting plugin: ' + chalk.green('cypress-env\n'))
     if (dir === undefined) {
-        console.log(chalk.red('ConfigurationError!\n') + chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') + 'require("cypress-xray-junit-reporter/plugin")(on, config, __dirname)')
+        console.log(chalk.red('ConfigurationError!\n') + chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') + 'require("cross-env")(on, config, __dirname)')
         console.log(separator)
-        throw new Error('You must specify the "__dirname" element in the config, change the require to:\nrequire("cypress-xray-junit-reporter/plugin")(on, config, __dirname)')
+        throw new Error('You must specify the "__dirname" element in the config, change the require to:\nrequire("cross-env")(on, config, __dirname)')
     }
     loadLocalENV(config, dir)
     return config;
