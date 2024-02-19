@@ -4,6 +4,8 @@
         "specPattern",
         "excludeSpecPattern",
         "awsSecretsManagerConfig",
-        "supportFile"
+        "supportFile",
+        "viewportWidth",
+        "viewportHeight"
     ]
 }
