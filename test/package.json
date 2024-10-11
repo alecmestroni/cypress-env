@@ -1,0 +1,35 @@
+{
+  "name": "cypress-aws-secrets-manager-test",
+  "version": "1.0.0",
+  "description": "Test for Cypress Plugin | Integrate the power of AWS Secrets Manager seamlessly into your Cypress tests with the cypress-aws-secrets-manager plugin. This lightweight yet powerful plugin facilitates the secure loading of secrets stored in AWS Secrets Manager directly into your Cypress environment variables.",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "npx cypress open -e envName=test",
+    "cy:run": "npx cypress run -e envName=test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alecmestroni/cypress-aws-secrets-manager.git"
+  },
+  "keywords": [
+    "aws",
+    "cypress",
+    "secret",
+    "secretsmanager",
+    "aws-secrets-manager",
+    "env"
+  ],
+  "author": "alec-js",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alecmestroni/cypress-aws-secrets-manager/issues"
+  },
+  "homepage": "https://github.com/alecmestroni/cypress-aws-secrets-manager#readme",
+  "dependencies": {
+    "cypress": "^13.15.0",
+    "cypress-env": "file:.."
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
