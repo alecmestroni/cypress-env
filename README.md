@@ -83,14 +83,14 @@ JSON files must respect this syntax:
 }
 ```
 
-| Parameter               | Mandatory | Overwrites value in cypress.config.js | Notes                                                                               |
-| ----------------------- | --------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
-| baseUrl                 | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
-| specPattern             | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
-| excludeSpecPattern      | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
-| supportFile             | FALSE     | TRUE                                  | Needs the parameters "supportFile" in the main e2e or component object set to false |
-| env                     | FALSE     | FALSE                                 | OBJ added to values in cypress.config.js                                            |
-| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secrets-manager                                             |
+| Parameter          | Mandatory | Overwrites value in cypress.config.js | Notes                                                                               |
+| ------------------ | --------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
+| baseUrl            | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
+| specPattern        | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
+| excludeSpecPattern | FALSE     | TRUE                                  | Overwrites value in cypress.config.js                                               |
+| supportFile        | FALSE     | TRUE                                  | Needs the parameters "supportFile" in the main e2e or component object set to false |
+| env                | FALSE     | FALSE                                 | OBJ added to values in cypress.config.js                                            |
+|                    |
 
 ### Open or run cypress with the correct environment variables:
 
@@ -185,11 +185,11 @@ npm run cy:test
 ### Compatibility with cypress-aws-secrets-manager
 
 ["cypress-aws-secrets-manager"](https://www.npmjs.com/package/cypress-aws-secrets-manager) is a plugin that allows a secret stored in the AWS secret manager to be loaded into cypress as an environment variable.
-To make life easier I added a new key: awsSecretsManagerConfig.
+To make life easier I added a new key inside ENV: AWS_SECRET_MANAGER_CONFIG.
 
-| Parameter               | Mandatory | Overwrites value in cypress.config.js | Notes                                   |
-| ----------------------- | --------- | ------------------------------------- | --------------------------------------- |
-| awsSecretsManagerConfig | FALSE     | TRUE                                  | OBJ used by cypress-aws-secrets-manager |
+| Parameter                 | Mandatory | Overwrites value in cypress.config.js | Notes                                   |
+| ------------------------- | --------- | ------------------------------------- | --------------------------------------- |
+| AWS_SECRET_MANAGER_CONFIG | FALSE     | TRUE                                  | OBJ used by cypress-aws-secrets-manager |
 
 The secret manager plugin will automatically handle this obj to recover the secret archived on AWS secret manager.
 
@@ -204,12 +204,12 @@ The secret manager plugin will automatically handle this obj to recover the secr
     "var1": "value1",
     "var2": "value2",
     "var3": "value3",
-    "envName": "test"
-  },
-  "awsSecretsManagerConfig": {
-    "secretName": "...",
-    "profile": "...",
-    "region": "..."
+    "envName": "test",
+    "AWS_SECRET_MANAGER_CONFIG": {
+      "secretName": "...",
+      "profile": "...",
+      "region": "..."
+    }
   }
 }
 ```

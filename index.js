@@ -6,9 +6,9 @@ module.exports = (on, config, dir) => {
     console.log(separator)
     console.log('Starting plugin: ' + chalk.green('cypress-env\n'))
     if (dir === undefined) {
-        console.log(chalk.red('ConfigurationError!\n') + chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') + 'require("cross-env")(on, config, __dirname)')
+        console.log(chalk.red('ConfigurationError!\n') + chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') + 'require("cypress-env")(on, config, __dirname)')
         console.log(separator)
-        throw new Error('You must specify the "__dirname" element in the config, change the require to:\nrequire("cross-env")(on, config, __dirname)')
+        throw new Error('You must specify the "__dirname" element in the config, change the require to:\nrequire("cypress-env")(on, config, __dirname)')
     }
     loadLocalENV(config, dir)
     return config;
@@ -46,6 +46,6 @@ async function loadLocalENV(config, dir) {
     } else if (!config.env.envName) {
         console.log(chalk.green('√ ') + chalk.white('No environment configuration specified, using basic configuration!'))
     } else if (config.env.envName === '$ENV' && config.env.envName === '%ENV%') {
-        console.log('Test configuration error dependency needed: cross-env not configured correctly')
+        console.log('Test configuration error dependency needed: cypress-env not configured correctly')
     }
 }
