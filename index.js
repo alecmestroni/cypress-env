@@ -38,9 +38,7 @@ async function getLocalEnv(config, dir) {
       }
       if (config.env.ENV_LOG_MODE !== 'silent') console.log(chalk.yellow('env ') + `: ${JSON.stringify(config.env, null, 1)}\n`)
     }
-    console.log(
-      chalk.green('\n√ ') + chalk.white('Configurations loaded correctly for the environment: ') + chalk.cyan(`< ${envName.toUpperCase()} >`)
-    )
+    console.log(chalk.green('√ ') + chalk.white('Configurations loaded correctly for the environment: ') + chalk.cyan(`< ${envName.toUpperCase()} >`))
   } catch (err) {
     console.error(err)
   }
