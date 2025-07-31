@@ -2,3 +2,4 @@ package-json.json
 node_modules
 .gitignore
 test
+.github

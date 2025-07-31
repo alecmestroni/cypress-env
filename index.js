@@ -26,7 +26,7 @@ async function getLocalEnv(config, dir) {
     const settings = require(environmentFilename)
     const cypressSettings = require('./cySettings.json')
     Object.keys(settings).forEach((item) => {
-      if (cypressSettings.settings.includes(item)) {
+      if (cypressSettings.settings.includes(item) && config?.resolved?.[item]?.from !== 'config' && !config.resolved[item].item) {
         config[item] = settings[item]
         if (config.env.ENV_LOG_MODE !== 'silent') console.log(`${chalk.yellow(item)} : ${JSON.stringify(settings[item], null, 1)}`)
       }
@@ -34,7 +34,7 @@ async function getLocalEnv(config, dir) {
     if (settings.env) {
       config.env = {
         ...settings.env,
-        ...config.env
+        ...config.env,
       }
       if (config.env.ENV_LOG_MODE !== 'silent') console.log(chalk.yellow('env ') + `: ${JSON.stringify(config.env, null, 1)}\n`)
     }
