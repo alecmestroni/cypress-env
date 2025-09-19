@@ -6,6 +6,7 @@
         "awsSecretsManagerConfig",
         "supportFile",
         "viewportWidth",
-        "viewportHeight"
+        "viewportHeight",
+        "shared"
     ]
 }

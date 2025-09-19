@@ -1,0 +1,10 @@
+{
+    "viewportWidth": 1920,
+    "viewportHeight": 1080,
+    "supportFile": "cypress/support/env.js",
+    "env": {
+        "everywhere": "fromShared",
+        "inEnvJsonSharedAndConfig": "fromShared",
+        "inSharedAndConfig": "fromShared"
+    }
+}

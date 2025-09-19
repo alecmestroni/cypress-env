@@ -14,6 +14,25 @@ Easily manage and streamline your Cypress test scripts across multiple environme
   </a>
 </h3>
 
+## Table of Contents
+
+- [Install](#install)
+- [Configuration](#configuration)
+  - [1. Code in `cypress.config.js`](#1-code-in-cypressconfigjs)
+  - [2. Create the `env.config` folder](#2-create-the-envconfig-folder)
+  - [3. Add your environment JSON files](#3-add-your-environment-json-files)
+  - [4. Control Log Verbosity with `ENV_LOG_MODE`](#4-control-log-verbosity-with-env_log_mode)
+  - [5. Open or run Cypress with the correct environment variables](#5-open-or-run-cypress-with-the-correct-environment-variables)
+- [Shared Configurations Feature](#shared-configurations-feature)
+- [Configuration Priority Order](#configuration-priority-order)
+- [Results example](#results-example)
+  - [Correct configuration](#correct-configuration)
+  - [Correct configuration with shared settings](#correct-configuration-with-shared-settings)
+  - [No configuration specified](#no-configuration-specified)
+  - [Wrong configuration (missing `__dirname`)](#wrong-configuration-missing-__dirname)
+- [Little tip for you](#little-tip-for-you)
+- [Compatibility with cypress-aws-secrets-manager](#compatibility-with-cypress-aws-secrets-manager)
+
 ---
 
 ## Install
@@ -38,9 +57,9 @@ In your `cypress.config.js` file:
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      require('cypress-env')(on, config, __dirname)
-    }
-  }
+      require("cypress-env")(on, config, __dirname)
+    },
+  },
 })
 ```
 
@@ -91,6 +110,7 @@ JSON files must respect this syntax:
 | specPattern        | FALSE     | TRUE                                    | Overwrites value in `cypress.config.js`                                 |
 | excludeSpecPattern | FALSE     | TRUE                                    | Overwrites value in `cypress.config.js`                                 |
 | supportFile        | FALSE     | TRUE                                    | Requires supportFile in the main e2e or component object set to `false` |
+| shared             | FALSE     | N/A                                     | Boolean: enables loading of shared configurations from `_shared.json`   |
 | env                | FALSE     | FALSE                                   | Merged into `env` object in `cypress.config.js`                         |
 
 ### 4. Control Log Verbosity with `ENV_LOG_MODE`
@@ -146,6 +166,81 @@ npx cypress run -e envName=test
 npx cypress run -e envName=test -e ENV_LOG_MODE=silent
 ```
 
+## Shared Configurations Feature
+
+You can now use shared configurations across multiple environments! Add a `_shared.json` file in your `env.config` folder to define common settings that can be reused across environments.
+
+**Structure with shared configurations:**
+
+```bash
+├── env.config
+│   ├── _shared.json    # ← Common configurations
+│   ├── test.json
+│   ├── stage.json
+│   └── prod.json
+```
+
+**Example `_shared.json`:**
+
+```json
+{
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
+  "supportFile": "cypress/support/env.js",
+  "env": {
+    "commonApiUrl": "https://api.example.com",
+    "defaultTimeout": 10000,
+    "retries": 2,
+    "sharedVariable": "This value is shared across environments",
+    "specificTestVar": "This value is overwritten buy env configurations"
+  }
+}
+```
+
+**Example environment with shared configurations:**
+
+```json
+// test.json
+{
+  "shared": true,
+  "baseUrl": "https://test.example.com",
+  "specPattern": ["**/*.test.js"],
+  "env": {
+    "specificTestVar": "This overrides shared settings"
+  }
+}
+```
+
+When `"shared": true` is set in an environment file:
+
+1. **Shared configurations are loaded first** from `_shared.json`
+2. **Environment-specific settings override** shared ones
+3. **Environment variables are merged**, with environment-specific taking precedence
+
+## **Configuration Priority Order:**
+
+The plugin respects a strict priority hierarchy when applying configurations:
+
+1. **CLI arguments** (highest priority) - Cannot be overridden
+2. **Environment JSON files** - Environment-specific settings
+3. **Shared configurations** - Common settings from `_shared.json`
+4. **Default config** - Base `cypress.config.js` settings (lowest priority)
+
+This means:
+
+- CLI parameters like `-e var=value` will never be overwritten
+- Environment-specific settings always override shared configurations
+- Shared configurations override default config values
+- The plugin only applies settings that haven't been set by higher priority sources
+
+**Benefits:**
+
+- **Reuse common configurations** across multiple environments
+- **Override only what's different** per environment
+- **Cleaner environment files** with less duplication
+- **Easier maintenance** of shared settings
+- **Predictable configuration precedence** with CLI always taking priority
+
 ## Results example
 
 ### Correct configuration
@@ -164,6 +259,36 @@ Extracting local configurations from: "path/to/environment.json"
  - env: "{\n    \"var1\": \"value1\",\n    \"var2\": \"value2\",\n    \"var3\": \"value3\",\n    \"envName\": \"test\"\n  }"
 
 √ Configurations loaded correctly for the environment: < TEST >
+
+====================================================================================================
+```
+
+### Correct configuration with shared settings
+
+```bash
+====================================================================================================
+
+Starting plugin: cypress-env
+
+Extracting local configurations from: "path/to/test.json"
+
+Loading shared configurations from: "path/to/_shared.json"
+
+ - baseUrl: "https://test.example.com"
+ - specPattern: ["**/*.test.js"]
+ - viewportWidth: 1920
+ - viewportHeight: 1080
+ - supportFile: "cypress/support/env.js"
+ - env: {
+     "commonApiUrl": "https://api.example.com",
+     "defaultTimeout": 10000,
+     "retries": 2,
+     "sharedVariable": "This value is shared across environments",
+     "envName": "test",
+     "specificTestVar": "This overrides shared settings"
+}
+
+√ Configurations loaded correctly for the environment: < TEST > (with shared configurations)
 
 ====================================================================================================
 ```
