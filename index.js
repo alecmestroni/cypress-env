@@ -58,8 +58,6 @@ async function getLocalEnv(config, dir) {
       },
     }
 
-    console.log(config.resolved)
-
     // Apply configurations to Cypress config
     Object.keys(mergedSettings).forEach((item) => {
       if (item !== "shared" && cypressSettings.settings.includes(item) && config?.resolved?.[item]?.from !== "cli") {
