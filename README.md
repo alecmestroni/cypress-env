@@ -17,6 +17,7 @@ Easily manage and streamline your Cypress test scripts across multiple environme
 ## Table of Contents
 
 - [Install](#install)
+- [Breaking Changes in v2.x](#breaking-changes-in-v2x)
 - [Configuration](#configuration)
   - [1. Code in `cypress.config.js`](#1-code-in-cypressconfigjs)
   - [2. Create the `env.config` folder](#2-create-the-envconfig-folder)
@@ -47,6 +48,44 @@ or as a global module
 $ npm install -g cypress-env
 ```
 
+## Breaking Changes in v2.x
+
+Starting from version 2.0, `cypress-env` uses async/await syntax for better compatibility with modern Cypress and other plugins. Update your configuration as follows:
+
+**Old syntax (v1.x):**
+
+```js
+// cypress.config.js - OLD
+module.exports = defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+      require("cypress-env")(on, config, __dirname)
+    },
+  },
+})
+```
+
+**New syntax (v2.x):**
+
+```js
+// cypress.config.js - NEW
+module.exports = defineConfig({
+  e2e: {
+    async setupNodeEvents(on, config) {
+      const { setCypressEnv } = require("cypress-env")
+      config = await setCypressEnv(config, __dirname)
+      return config
+    },
+  },
+})
+```
+
+The new syntax provides:
+
+- Better compatibility with async plugins like `cypress-aws-secrets-manager`
+- Explicit function naming for clarity
+- Proper async/await support
+
 ## Configuration
 
 ### 1. Code in `cypress.config.js`
@@ -56,8 +95,10 @@ In your `cypress.config.js` file:
 ```js
 module.exports = defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
-      require("cypress-env")(on, config, __dirname)
+    async setupNodeEvents(on, config) {
+      const { setCypressEnv } = require("cypress-env")
+      config = await setCypressEnv(config, __dirname)
+      return config
     },
   },
 })
@@ -349,6 +390,30 @@ npm run cy:test
 | ------------------------- | --------- | --------------------------------------- | ------------------------------------------ |
 | AWS_SECRET_MANAGER_CONFIG | FALSE     | TRUE                                    | Object used by cypress-aws-secrets-manager |
 
+**Example cypress.config.js with both plugins:**
+
+```js
+// cypress.config.js
+module.exports = defineConfig({
+  e2e: {
+    async setupNodeEvents(on, config) {
+      // Load cypress-env FIRST to set up environment configurations
+      const { setCypressEnv } = require("cypress-env")
+      config = await setCypressEnv(config, __dirname)
+
+      // Then load AWS secrets using the environment configuration
+      const { getSecretFromAWS } = require("cypress-aws-secrets-manager")
+      config.env = await getSecretFromAWS(config.env, __dirname)
+      require("cypress-aws-secrets-manager/tasks")(on, config)
+
+      return config
+    },
+  },
+})
+```
+
+**Example environment.json with AWS configuration:**
+
 ```json
 // environment.json
 {
@@ -369,6 +434,8 @@ npm run cy:test
   }
 }
 ```
+
+**Important:** Always import `cypress-env` **before** `cypress-aws-secrets-manager` to ensure environment configurations are loaded first.
 
 ---
 

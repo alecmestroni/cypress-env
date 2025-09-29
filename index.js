@@ -2,7 +2,9 @@ const chalk = require("chalk")
 
 const separator = chalk.grey("\n====================================================================================================\n")
 
-module.exports = (on, config, dir) => {
+module.exports = { setCypressEnv }
+
+async function setCypressEnv(config, dir) {
   console.log(separator)
   console.log("Starting plugin: " + chalk.green("cypress-env\n"))
   if (dir === undefined) {
@@ -14,7 +16,7 @@ module.exports = (on, config, dir) => {
     console.log(separator)
     throw new Error('You must specify the "__dirname" element in the config, change the require to:\nrequire("cypress-env")(on, config, __dirname)')
   }
-  loadLocalENV(config, dir)
+  await loadLocalENV(config, dir)
   return config
 }
 
