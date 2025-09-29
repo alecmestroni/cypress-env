@@ -1,11 +1,7 @@
 {
   "shared": true,
-  "baseUrl": "https://www.google.com",
   "specPattern": [
-    "**/*.env.js"
-  ],
-  "excludeSpecPattern": [
-    "**/*.cy.js"
+    "**/*.test.js"
   ],
   "env": {
     "googleImage": "/imghp?hl=en&authuser=0&ogbl",
@@ -17,5 +13,10 @@
     },
     "everywhere": "fromEnvJson",
     "inEnvJsonSharedAndConfig": "fromEnvJson"
-  }
+  },
+  "baseUrl": "https://www.fromEnvJson.com",
+  "fixturesFolder": "fromEnvJson",
+  "excludeSpecPattern": [
+    "fromEnvJson"
+  ]
 }

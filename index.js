@@ -66,7 +66,7 @@ async function getLocalEnv(config, dir) {
 
     // Apply configurations to Cypress config
     Object.keys(mergedSettings).forEach((item) => {
-      if (item !== "shared" && cypressSettings.settings.includes(item) && config?.resolved?.[item]?.from !== "cli") {
+      if (item !== "shared" && cypressSettings.settings.includes(item) && config?.resolved?.[item]?.from !== "config") {
         config[item] = mergedSettings[item]
         if (config.env.ENV_LOG_MODE !== "silent") console.log(`${chalk.yellow(item)} : ${JSON.stringify(mergedSettings[item], null, 1)}`)
       }

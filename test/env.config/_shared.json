@@ -6,5 +6,9 @@
         "everywhere": "fromShared",
         "inEnvJsonSharedAndConfig": "fromShared",
         "inSharedAndConfig": "fromShared"
-    }
+    },
+    "baseUrl": "https://www.fromShared.com",
+    "fixturesFolder": "fromShared",
+    "excludeSpecPattern": "fromShared",
+    "fileServerFolder": "fromShared"
 }

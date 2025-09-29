@@ -260,19 +260,32 @@ When `"shared": true` is set in an environment file:
 
 ## **Configuration Priority Order:**
 
-The plugin respects a strict priority hierarchy when applying configurations:
+The plugin respects a strict **priority order** in two different way:
+
+### **Environment Variables Priority** (env object):
 
 1. **CLI arguments** (highest priority) - Cannot be overridden
 2. **Environment JSON files** - Environment-specific settings
 3. **Shared configurations** - Common settings from `_shared.json`
 4. **Default config** - Base `cypress.config.js` settings (lowest priority)
 
-This means:
+### **Cypress Configurations Priority** (baseUrl, specPattern, etc.):
 
-- CLI parameters like `-e var=value` will never be overwritten
-- Environment-specific settings always override shared configurations
-- Shared configurations override default config values
-- The plugin only applies settings that haven't been set by higher priority sources
+1. **CLI arguments** (highest priority) - Cannot be overridden
+2. **Default config** - Base `cypress.config.js` settings
+3. **Environment JSON files** - Environment-specific settings
+4. **Shared configurations** - Common settings from `_shared.json` (lowest priority)
+
+**Why the difference?**
+
+- **Environment variables** have Cypress built-in support to detect CLI vs config source, allowing the plugin to respect the intuitive priority order
+- **Cypress configurations** (baseUrl, specPattern, etc.) don't provide source detection, so the plugin cannot establish intuitive priority order
+
+**This means:**
+
+- CLI parameters like `-e var=value` will never be overwritten for both types
+- **For env variables**: Environment-specific > Shared > Default
+- **For configurations**: Default > Shared > Environment-specific
 
 **Benefits:**
 
