@@ -11,10 +11,14 @@ async function setCypressEnv(config, dir) {
     console.log(
       chalk.red("ConfigurationError!\n") +
         chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') +
-        'require("cypress-env")(on, config, __dirname)'
+        chalk.cyan('      const { setCypressEnv } = require("cypress-env")\n') +
+        chalk.cyan("      config = await setCypressEnv(config, __dirname)\n") +
+        chalk.cyan("      return config")
     )
     console.log(separator)
-    throw new Error('You must specify the "__dirname" element in the config, change the require to:\nrequire("cypress-env")(on, config, __dirname)')
+    throw new Error(
+      'You must specify the "__dirname" element in the config, change the require to:\n      const { setCypressEnv } = require("cypress-env")\n      config = await setCypressEnv(config, __dirname)\n      return config'
+    )
   }
   await loadLocalENV(config, dir)
   return config

@@ -355,7 +355,9 @@ Starting plugin: cypress-env
 
 ConfigurationError!
 You must specify the "__dirname" element in the config, change the require to:
-require("cypress-env")(on, config, __dirname)
+      const { setCypressEnv } = require("cypress-env")
+      config = await setCypressEnv(config, __dirname)
+      return config
 
 ====================================================================================================
 ```
