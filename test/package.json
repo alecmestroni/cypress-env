@@ -4,8 +4,8 @@
   "description": "Test for Cypress Plugin | Integrate the power of AWS Secrets Manager seamlessly into your Cypress tests with the cypress-env plugin. This lightweight yet powerful plugin facilitates the secure loading of secrets stored in AWS Secrets Manager directly into your Cypress environment variables.",
   "main": "index.js",
   "scripts": {
-    "cy:open": "npx cypress open --e2e -b chrome -e envName=test,everywhere=fromScript --config baseUrl=https://www.fromScript.com",
-    "cy:run": "npx cypress run -e envName=test,everywhere=fromScript --config baseUrl=https://www.fromScript.com"
+    "cy:open": "npx cypress open --e2e -b chrome -e envName=test,everywhere=fromScript -x everywhere=fromScript --config baseUrl=https://www.fromScript.com",
+    "cy:run": "npx cypress run -e envName=test,everywhere=fromScript -x everywhere=fromScript --config baseUrl=https://www.fromScript.com"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "cypress-env": "file:.."
   },
   "devDependencies": {
-    "cypress": "^15.3.0",
+    "cypress": "^15.10.0",
     "typescript": "^5.2.2"
   }
 }

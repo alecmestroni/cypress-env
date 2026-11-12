@@ -10,10 +10,10 @@ async function setCypressEnv(config, dir) {
   if (dir === undefined) {
     console.log(
       chalk.red("ConfigurationError!\n") +
-        chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') +
-        chalk.cyan('      const { setCypressEnv } = require("cypress-env")\n') +
-        chalk.cyan("      config = await setCypressEnv(config, __dirname)\n") +
-        chalk.cyan("      return config")
+      chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') +
+      chalk.cyan('      const { setCypressEnv } = require("cypress-env")\n') +
+      chalk.cyan("      config = await setCypressEnv(config, __dirname)\n") +
+      chalk.cyan("      return config")
     )
     console.log(separator)
     throw new Error(
@@ -52,8 +52,8 @@ async function getLocalEnv(config, dir) {
     }
 
     // Merge environment-specific settings over shared settings
-    const { env: sharedEnv, ...otherSharedSettings } = mergedSettings
-    const { env: envSettings, ...otherEnvSettings } = settings
+    const { env: sharedEnv, expose: sharedExpose, ...otherSharedSettings } = mergedSettings
+    const { env: envSettings, expose: exposeSettings, ...otherEnvSettings } = settings
 
     mergedSettings = {
       ...(otherSharedSettings ?? {}),
@@ -61,6 +61,10 @@ async function getLocalEnv(config, dir) {
       env: {
         ...(sharedEnv ?? {}),
         ...(envSettings ?? {}),
+      },
+      expose: {
+        ...(sharedExpose ?? {}),
+        ...(exposeSettings ?? {}),
       },
     }
 
@@ -84,11 +88,24 @@ async function getLocalEnv(config, dir) {
       }
     }
 
+    // Handle exposed configuration values
+    if (mergedSettings.expose) {
+      config.expose = config.expose ?? {}
+      Object.keys(mergedSettings.expose).forEach((exposeKey) => {
+        if (config?.resolved?.expose?.[exposeKey]?.from !== "cli") {
+          config.expose[exposeKey] = mergedSettings.expose[exposeKey]
+        }
+      })
+      if (config.env.ENV_LOG_MODE !== "silent") {
+        console.log(chalk.yellow("expose ") + `: ${JSON.stringify(config.expose, null, 1)}\n`)
+      }
+    }
+
     const sharedText = settings.shared === true ? " (with shared configurations)" : ""
     console.log(
       chalk.green("√ ") +
-        chalk.white("Configurations loaded correctly for the environment: ") +
-        chalk.cyan(`< ${envName.toUpperCase()} >${sharedText}`)
+      chalk.white("Configurations loaded correctly for the environment: ") +
+      chalk.cyan(`< ${envName.toUpperCase()} >${sharedText}`)
     )
   } catch (err) {
     console.error(err)
