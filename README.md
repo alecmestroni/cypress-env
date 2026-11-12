@@ -17,6 +17,7 @@ Easily manage and streamline your Cypress test scripts across multiple environme
 ## Table of Contents
 
 - [Install](#install)
+- [Cypress compatibility](#cypress-compatibility)
 - [Breaking Changes in v2.x](#breaking-changes-in-v2x)
 - [Configuration](#configuration)
   - [1. Code in `cypress.config.js`](#1-code-in-cypressconfigjs)
@@ -47,6 +48,12 @@ or as a global module
 ```shell
 $ npm install -g cypress-env
 ```
+
+## Cypress compatibility
+
+`cypress-env` requires Cypress 15.10.0 or later. This minimum version is needed
+for the `expose` configuration support. Cypress is provided by the project
+using this library.
 
 ## Breaking Changes in v2.x
 
@@ -141,6 +148,12 @@ JSON files must respect this syntax:
     "var2": "value2",
     "var3": "value3",
     "envName": "environment"
+  },
+  "expose": {
+    "var1": "value1",
+    "var2": "value2",
+    "var3": "value3",
+    "envName": "environment"
   }
 }
 ```
@@ -153,6 +166,7 @@ JSON files must respect this syntax:
 | supportFile        | FALSE     | TRUE                                    | Requires supportFile in the main e2e or component object set to `false` |
 | shared             | FALSE     | N/A                                     | Boolean: enables loading of shared configurations from `_shared.json`   |
 | env                | FALSE     | FALSE                                   | Merged into `env` object in `cypress.config.js`                         |
+| expose             | FALSE     | FALSE                                   | Merged into `expose` object in `cypress.config.js`                      |
 
 ### 4. Control Log Verbosity with `ENV_LOG_MODE`
 
