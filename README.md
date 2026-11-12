@@ -17,6 +17,7 @@ Easily manage and streamline your Cypress test scripts across multiple environme
 ## Table of Contents
 
 - [Install](#install)
+- [Cypress compatibility](#cypress-compatibility)
 - [Breaking Changes in v2.x](#breaking-changes-in-v2x)
 - [Configuration](#configuration)
   - [1. Code in `cypress.config.js`](#1-code-in-cypressconfigjs)
@@ -47,6 +48,12 @@ or as a global module
 ```shell
 $ npm install -g cypress-env
 ```
+
+## Cypress compatibility
+
+`cypress-env` requires Cypress 15.10.0 or later. This minimum version is needed
+for the `expose` configuration support. Cypress is provided by the project
+using this library.
 
 ## Breaking Changes in v2.x
 
