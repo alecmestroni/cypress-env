@@ -18,6 +18,7 @@ Easily manage and streamline your Cypress test scripts across multiple environme
 
 - [Install](#install)
 - [Cypress compatibility](#cypress-compatibility)
+- [Breaking Changes in v3.x](#breaking-changes-in-v3x)
 - [Breaking Changes in v2.x](#breaking-changes-in-v2x)
 - [Configuration](#configuration)
   - [1. Code in `cypress.config.js`](#1-code-in-cypressconfigjs)
@@ -25,6 +26,7 @@ Easily manage and streamline your Cypress test scripts across multiple environme
   - [3. Add your environment JSON files](#3-add-your-environment-json-files)
   - [4. Control Log Verbosity with `ENV_LOG_MODE`](#4-control-log-verbosity-with-env_log_mode)
   - [5. Open or run Cypress with the correct environment variables](#5-open-or-run-cypress-with-the-correct-environment-variables)
+- [Reading values in your tests](#reading-values-in-your-tests)
 - [Shared Configurations Feature](#shared-configurations-feature)
 - [Configuration Priority Order](#configuration-priority-order)
 - [Results example](#results-example)
@@ -51,8 +53,41 @@ $ npm install -g cypress-env
 
 ## Cypress compatibility
 
-When using the `expose` configuration, Cypress 15.10.0 or later is required.
-If `expose` is not configured, `cypress-env` leaves it untouched.
+| `cypress-env` | Cypress               | Read values in your tests with                                         | Install                                |
+| ------------- | --------------------- | ---------------------------------------------------------------------- | -------------------------------------- |
+| 3.x           | >= 15.10.0 (incl. 16) | `cy.env()` and `Cypress.expose()`                                      | `npm install cypress-env --save-dev`   |
+| 2.x           | < 15.10.0             | `Cypress.env()` (deprecated in Cypress 15.10.0, removed in Cypress 16) | `npm install cypress-env@2 --save-dev` |
+
+- **v3.x** is tested against Cypress 15.10.0 (the first release with `cy.env()` and `Cypress.expose()`) and the latest Cypress release.
+- **v2.x** stays available for projects that cannot upgrade Cypress yet. It only receives bug fixes, released from the `2.x` branch and published under the `v2` npm dist-tag, so `latest` always points to v3.
+
+The plugin itself runs in Node and writes to `config.env` / `config.expose` inside `setupNodeEvents`: that is **not** the deprecated API. What changed in Cypress is how those values are read from the browser, see [Reading values in your tests](#reading-values-in-your-tests).
+
+## Breaking Changes in v3.x
+
+Version 3.0 follows the [deprecation of `Cypress.env()`](https://on.cypress.io/cypress-env-migration) (deprecated in Cypress 15.10.0, removed in Cypress 16):
+
+- **Cypress 15.10.0 or later is required** (`peerDependencies`). On older Cypress versions keep using `cypress-env@2`.
+- **New `expose` key** in the environment JSON files and in `_shared.json`: it is merged into the Cypress `expose` configuration and read with `Cypress.expose()`. If no `expose` key is configured, `cypress-env` leaves `config.expose` untouched.
+- The `env` key keeps working exactly as before on the Node side, but in your tests its values must now be read with `cy.env()` instead of `Cypress.env()`.
+
+No change is needed in `cypress.config.js`: the `setCypressEnv` syntax is the same as v2.x.
+
+**Migrating your tests:**
+
+```js
+// Before (cypress-env 2.x, Cypress < 15.10.0)
+cy.visit(Cypress.env("homepage"))
+cy.get("#password").type(Cypress.env("password"))
+
+// After (cypress-env 3.x, Cypress >= 15.10.0)
+// non-sensitive value, moved from "env" to "expose" in the JSON file
+cy.visit(Cypress.expose("homepage"))
+// sensitive value, kept in "env"
+cy.env(["password"]).then(({ password }) => {
+  cy.get("#password").type(password, { log: false })
+})
+```
 
 ## Breaking Changes in v2.x
 
@@ -166,6 +201,10 @@ JSON files must respect this syntax:
 | env                | FALSE     | FALSE                                   | Merged into `env` object in `cypress.config.js`                         |
 | expose             | FALSE     | FALSE                                   | Merged into `expose` object in `cypress.config.js`                      |
 
+Use `env` for sensitive values (credentials, tokens: they stay in the Node process and are read with `cy.env()`) and `expose` for non-sensitive configuration that is safe to make available in the browser (read with `Cypress.expose()`).
+
+> `envName` and `ENV_LOG_MODE` are always read by the plugin from `env`, so keep passing them with `-e` / `--env`.
+
 ### 4. Control Log Verbosity with `ENV_LOG_MODE`
 
 The plugin supports different log modes controlled by the `ENV_LOG_MODE` environment variable. By default, full logs are displayed. To restrict output and show only summary messages, set:
@@ -190,6 +229,11 @@ Extracting local configurations from: path/to/environment.json
      "var2": "value2",
      "var3": "value3",
      "envName": "test"
+   }
+ - expose: {
+     "var1": "value1",
+     "var2": "value2",
+     "var3": "value3"
    }
 
 √ Configurations loaded correctly for the environment: < TEST >
@@ -218,6 +262,45 @@ npx cypress run -e envName=test
 # or silent:
 npx cypress run -e envName=test -e ENV_LOG_MODE=silent
 ```
+
+To override a single value from the command line use `-e` / `--env` for `env` values and `-x` / `--expose` for `expose` values:
+
+```bash
+npx cypress run -e envName=test,var1=fromCli -x var2=fromCli
+```
+
+## Reading values in your tests
+
+`Cypress.env()` is deprecated since Cypress 15.10.0 and has been **removed in Cypress 16**. Values loaded by `cypress-env` are read with the two APIs that replace it:
+
+| Key in the JSON file | Read in your tests with | Use it for                                              |
+| -------------------- | ----------------------- | ------------------------------------------------------- |
+| `expose`             | `Cypress.expose()`      | Non-sensitive configuration (URLs, flags, API versions) |
+| `env`                | `cy.env()`              | Sensitive values (credentials, tokens, secrets)         |
+
+**`Cypress.expose()`** is synchronous and can be used anywhere:
+
+```js
+const apiVersion = Cypress.expose("apiVersion")
+cy.visit(Cypress.expose("homepage"))
+```
+
+**`cy.env()`** is an asynchronous command: it takes an array of keys and yields an object with the requested values, which stay in the Node process until a test asks for them:
+
+```js
+cy.env(["username", "password"]).then(({ username, password }) => {
+  cy.get("#username").type(username)
+  cy.get("#password").type(password, { log: false })
+})
+```
+
+A few things to keep in mind:
+
+- Values under `env` are **not** available through `Cypress.expose()`, and values under `expose` are not available through `cy.env()`: put each value under the key that matches how you want to read it.
+- `CYPRESS_*` operating-system variables populate `env` only, they never reach `expose`.
+- `cy.env()` is read-only: values cannot be set at runtime from the tests.
+
+See the official [migration guide](https://on.cypress.io/cypress-env-migration) for the full rationale.
 
 ## Shared Configurations Feature
 
@@ -269,12 +352,13 @@ When `"shared": true` is set in an environment file:
 1. **Shared configurations are loaded first** from `_shared.json`
 2. **Environment-specific settings override** shared ones
 3. **Environment variables are merged**, with environment-specific taking precedence
+4. **Exposed values are merged** in the same way (`expose` key), with environment-specific taking precedence
 
 ## **Configuration Priority Order:**
 
 The plugin respects a strict **priority order** in two different way:
 
-### **Environment Variables Priority** (env object):
+### **Environment Variables and Exposed Values Priority** (env and expose objects):
 
 1. **CLI arguments** (highest priority) - Cannot be overridden
 2. **Environment JSON files** - Environment-specific settings
@@ -290,13 +374,13 @@ The plugin respects a strict **priority order** in two different way:
 
 **Why the difference?**
 
-- **Environment variables** have Cypress built-in support to detect CLI vs config source, allowing the plugin to respect the intuitive priority order
+- **Environment variables and exposed values** have Cypress built-in support to detect CLI vs config source, allowing the plugin to respect the intuitive priority order
 - **Cypress configurations** (baseUrl, specPattern, etc.) don't provide source detection, so the plugin cannot establish intuitive priority order
 
 **This means:**
 
-- CLI parameters like `-e var=value` will never be overwritten for both types
-- **For env variables**: Environment-specific > Shared > Default
+- CLI parameters like `-e var=value` (or `-x var=value` for exposed values) will never be overwritten for both types
+- **For env variables and exposed values**: Environment-specific > Shared > Default
 - **For configurations**: Default > Shared > Environment-specific
 
 **Benefits:**
@@ -463,6 +547,14 @@ module.exports = defineConfig({
 ```
 
 **Important:** Always import `cypress-env` **before** `cypress-aws-secrets-manager` to ensure environment configurations are loaded first.
+
+Keep `AWS_SECRET_MANAGER_CONFIG` under `env` (not `expose`): the secrets loaded from AWS are merged into `env`, so read them in your tests with `cy.env()`:
+
+```js
+cy.env(["mySecret"]).then(({ mySecret }) => {
+  // use the secret here
+})
+```
 
 ---
 
