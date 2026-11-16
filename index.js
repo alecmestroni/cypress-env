@@ -10,10 +10,10 @@ async function setCypressEnv(config, dir) {
   if (dir === undefined) {
     console.log(
       chalk.red("ConfigurationError!\n") +
-      chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') +
-      chalk.cyan('      const { setCypressEnv } = require("cypress-env")\n') +
-      chalk.cyan("      config = await setCypressEnv(config, __dirname)\n") +
-      chalk.cyan("      return config")
+        chalk.yellow('You must specify the "__dirname" element in the config, change the require to: \n') +
+        chalk.cyan('      const { setCypressEnv } = require("cypress-env")\n') +
+        chalk.cyan("      config = await setCypressEnv(config, __dirname)\n") +
+        chalk.cyan("      return config")
     )
     console.log(separator)
     throw new Error(
@@ -89,7 +89,7 @@ async function getLocalEnv(config, dir) {
     }
 
     // Handle exposed configuration values
-    if (mergedSettings.expose) {
+    if (Object.keys(mergedSettings.expose).length > 0) {
       config.expose = config.expose ?? {}
       Object.keys(mergedSettings.expose).forEach((exposeKey) => {
         if (config?.resolved?.expose?.[exposeKey]?.from !== "cli") {
@@ -104,8 +104,8 @@ async function getLocalEnv(config, dir) {
     const sharedText = settings.shared === true ? " (with shared configurations)" : ""
     console.log(
       chalk.green("√ ") +
-      chalk.white("Configurations loaded correctly for the environment: ") +
-      chalk.cyan(`< ${envName.toUpperCase()} >${sharedText}`)
+        chalk.white("Configurations loaded correctly for the environment: ") +
+        chalk.cyan(`< ${envName.toUpperCase()} >${sharedText}`)
     )
   } catch (err) {
     console.error(err)

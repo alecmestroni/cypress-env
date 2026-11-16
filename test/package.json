@@ -29,7 +29,7 @@
     "cypress-env": "file:.."
   },
   "devDependencies": {
-    "cypress": "^15.10.0",
+    "cypress": "^15.21.1",
     "typescript": "^5.2.2"
   }
 }

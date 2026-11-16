@@ -51,9 +51,8 @@ $ npm install -g cypress-env
 
 ## Cypress compatibility
 
-`cypress-env` requires Cypress 15.10.0 or later. This minimum version is needed
-for the `expose` configuration support. Cypress is provided by the project
-using this library.
+When using the `expose` configuration, Cypress 15.10.0 or later is required.
+If `expose` is not configured, `cypress-env` leaves it untouched.
 
 ## Breaking Changes in v2.x
 
@@ -152,8 +151,7 @@ JSON files must respect this syntax:
   "expose": {
     "var1": "value1",
     "var2": "value2",
-    "var3": "value3",
-    "envName": "environment"
+    "var3": "value3"
   }
 }
 ```
