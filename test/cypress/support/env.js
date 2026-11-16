@@ -18,5 +18,5 @@
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 Cypress.Commands.add("visitGoogleImage", () => {
-    cy.visit(Cypress.env('googleImage'));
+    cy.env(['googleImage']).then(({ googleImage }) => cy.visit(googleImage));
 })

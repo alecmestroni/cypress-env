@@ -2,7 +2,22 @@ const chalk = require("chalk")
 
 const separator = chalk.grey("\n====================================================================================================\n")
 
+// `expose` (read in specs with Cypress.expose()) was introduced in Cypress 15.10.0
+const MIN_EXPOSE_VERSION = "15.10.0"
+
 module.exports = { setCypressEnv }
+
+function supportsExpose(version) {
+  // When the version is unknown, let Cypress validate the configuration itself
+  if (typeof version !== "string") return true
+  const current = version.split(".").map((n) => parseInt(n, 10))
+  const minimum = MIN_EXPOSE_VERSION.split(".").map((n) => parseInt(n, 10))
+  for (let i = 0; i < minimum.length; i++) {
+    if (Number.isNaN(current[i])) return true
+    if (current[i] !== minimum[i]) return current[i] > minimum[i]
+  }
+  return true
+}
 
 async function setCypressEnv(config, dir) {
   console.log(separator)
@@ -52,8 +67,8 @@ async function getLocalEnv(config, dir) {
     }
 
     // Merge environment-specific settings over shared settings
-    const { env: sharedEnv, ...otherSharedSettings } = mergedSettings
-    const { env: envSettings, ...otherEnvSettings } = settings
+    const { env: sharedEnv, expose: sharedExpose, ...otherSharedSettings } = mergedSettings
+    const { env: envSettings, expose: exposeSettings, ...otherEnvSettings } = settings
 
     mergedSettings = {
       ...(otherSharedSettings ?? {}),
@@ -61,6 +76,10 @@ async function getLocalEnv(config, dir) {
       env: {
         ...(sharedEnv ?? {}),
         ...(envSettings ?? {}),
+      },
+      expose: {
+        ...(sharedExpose ?? {}),
+        ...(exposeSettings ?? {}),
       },
     }
 
@@ -81,6 +100,28 @@ async function getLocalEnv(config, dir) {
       })
       if (config.env.ENV_LOG_MODE !== "silent") {
         console.log(chalk.yellow("env ") + `: ${JSON.stringify(config.env, null, 1)}\n`)
+      }
+    }
+
+    // Handle exposed configuration values (Cypress.expose(), available from Cypress 15.10.0)
+    if (Object.keys(mergedSettings.expose).length > 0) {
+      if (!supportsExpose(config.version)) {
+        console.log(
+          chalk.yellow("Warning: ") +
+            `the "expose" configuration requires Cypress ${MIN_EXPOSE_VERSION} or later (found ${config.version}), skipping it!
+`
+        )
+      } else {
+        config.expose = config.expose ?? {}
+        Object.keys(mergedSettings.expose).forEach((exposeKey) => {
+          if (config?.resolved?.expose?.[exposeKey]?.from !== "cli") {
+            config.expose[exposeKey] = mergedSettings.expose[exposeKey]
+          }
+        })
+        if (config.env.ENV_LOG_MODE !== "silent") {
+          console.log(chalk.yellow("expose ") + `: ${JSON.stringify(config.expose, null, 1)}
+`)
+        }
       }
     }
 

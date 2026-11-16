@@ -16,4 +16,9 @@ module.exports = defineConfig({
     inSharedAndConfig: "fromConfig",
     inConfig: "fromConfig",
   },
+  expose: {
+    inExpJsonSharedAndConfig: "fromConfig",
+    inSharedAndConfig: "fromConfig",
+    inConfig: "fromConfig",
+  },
 })

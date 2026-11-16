@@ -14,6 +14,17 @@
     "everywhere": "fromEnvJson",
     "inEnvJsonSharedAndConfig": "fromEnvJson"
   },
+  "expose": {
+    "googleImage": "/imghp?hl=en&authuser=0&ogbl",
+    "AWS_SSO_STRATEGY": "unset",
+    "AWS_SECRETS_LOCAL_DIR": "aws-secrets",
+    "AWS_SECRET_MANAGER_CONFIG": {
+      "secretName": "secretName",
+      "region": "region"
+    },
+    "everywhere": "fromExpJson",
+    "inExpJsonSharedAndConfig": "fromExpJson"
+  },
   "baseUrl": "https://www.fromEnvJson.com",
   "fixturesFolder": "fromEnvJson",
   "excludeSpecPattern": [

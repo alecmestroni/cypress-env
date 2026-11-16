@@ -1,8 +1,9 @@
 {
   "name": "cypress-env",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Cypress Plugin | Easily manage and streamline your Cypress test scripts across multiple environments with the cypress-env npm library. This lightweight utility simplifies the process of handling different environments (such as test, staging, and production) by providing a environment-specific settings in your Cypress tests.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {},
   "repository": {
     "type": "git",
@@ -22,6 +23,9 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2"
+  },
+  "peerDependencies": {
+    "cypress": ">=15.10.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2"
